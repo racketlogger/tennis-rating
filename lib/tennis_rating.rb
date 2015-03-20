@@ -47,7 +47,10 @@ end
 def give_ratings(result_set)
   read_yaml.each do |score|
     begin
-      p TennisRatings.new(score)
+      sample = TennisRatings.new(score)
+      print "Winner: #{sample.winner} "
+      print "Games won: #{sample.games_won}"
+      puts "Points: #{sample.points}"
     rescue ArgumentError
       puts "#{score} : Not a match result"
     end
