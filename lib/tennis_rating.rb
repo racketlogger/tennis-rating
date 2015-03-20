@@ -44,26 +44,27 @@ end
 # Method for checking
 #
 
-def give_ratings(result_set)
-  total_points = 0
-  promotion_points = 40000
-  demotion_points = 3500
+def give_ratings
+  average_points = 0
+  promotion_points = 140
+  demotion_points = 100
   read_yaml.each do |score|
     begin
       sample = TennisRatings.new(score)
-      total_points += sample.points[0]
+      average_points += sample.points[0]
     rescue ArgumentError
       puts "#{score} : Not a match result"
     end
   end
-  if total_points >= promotion_points
-    puts "You have promoted to next level Congrats!. Total points #{total_points}"
-  elsif total_points <= demotion_points
-    puts "You have been demoted Total points #{total_points}"
+  average_points = average_points / read_yaml.length
+  if average_points >= promotion_points
+    puts "You have promoted to next level Congrats!. Total points #{average_points}"
+  elsif average_points <= demotion_points
+    puts "You have been demoted Total points #{average_points}"
   else
-    puts "No change in your level Total points #{total_points}"
+    puts "No change in your level Total points #{average_points}"
   end
 end
 
 
-give_ratings(read_yaml)
+give_ratings
