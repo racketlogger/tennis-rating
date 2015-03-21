@@ -16,10 +16,6 @@ class TennisRatings < Tennis
       send(algorithm)
   end
 
-  def give_points(algorithm)
-      send(algorithm)
-  end
-
   private
 
   def calculate_points_zero
