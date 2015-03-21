@@ -48,23 +48,35 @@ def give_ratings
   average_points = 0
   promotion_points = 140
   demotion_points = 100
+  total_matches = read_yaml.length
   read_yaml.each do |score|
     begin
       sample = TennisRatings.new(score)
       average_points += sample.points[0]
     rescue ArgumentError
       puts "#{score} : Not a match result"
+      total_matches -= 1
     end
   end
-  average_points = average_points / read_yaml.length
+  average_points / total_matches
+end
+
+##
+# To update players level
+#
+def update_level(average_points)
+  promotion_points = 140
+  relegation_points = 100
+  level = 0
   if average_points >= promotion_points
-    puts "You have promoted to next level Congrats!. Total points #{average_points}"
-  elsif average_points <= demotion_points
-    puts "You have been demoted Total points #{average_points}"
+    level = 1
+  elsif average_points <= relegation_points
+    level = -1
   else
-    puts "No change in your level Total points #{average_points}"
+    level = 0
   end
+  puts "Points #{average_points}, Level #{level}"
 end
 
 
-give_ratings
+update_level(give_ratings)
