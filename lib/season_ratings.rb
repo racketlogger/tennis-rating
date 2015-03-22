@@ -4,29 +4,33 @@ class SeasonRating
 
   attr_reader :average_pointsS
 
-  def initialize(season_score, algorithm="calculate_points_one")
+  def initialize(season_score)
     average_points = 0
     matches_played = season_score.length
-    @matches = Array.new
+    @matches = []
     season_score.each do |match_score|
       begin
-        match  = TennisRatings.new(match_score, algorithm)
+        match  = TennisRatings.new(match_score)
         @matches << match
-        average_points += match.points.first
       rescue ArgumentError => e
         matches_played -= 1
       end
     end
-    @average_points = average_points / matches_played
+    calculate_ratings
   end
 
+  private
 
-  def update(algorithm)
-    average_points = 0
-    @matches.each do | match |
-      match.give_points(algorithm)
-      average_points += match.points.first
+  def calculate_ratings
+    @ratings = []
+    @matches.each do |match|
+      match.points.each_with_index do |point, index|
+        @ratings[index] = 0 unless @ratings[index]
+        @ratings[index] += point[0]
+      end
     end
-    @average_points = average_points / @matches.length
+    @ratings.each_with_index do |rate, index|
+      @ratings[index] = rate / @matches.length
+    end
   end
 end

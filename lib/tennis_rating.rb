@@ -7,16 +7,25 @@ class TennisRatings < Tennis
 
   attr_reader :points
 
-  def initialize(score, algorithm = "calculate_points_one" )
+  def initialize(score)
     super(score)
-    give_points(algorithm)
+    give_points
   end
 
-  def give_points(algorithm)
-      send(algorithm)
+  def give_points
+    calculate_all
   end
 
   private
+
+
+  def calculate_all
+    @points = []
+    calculate_points_zero
+    calculate_points_one
+    calculate_points_two
+    calculate_points_three
+  end
 
   def calculate_points_zero
     point_0 = 0
@@ -27,9 +36,8 @@ class TennisRatings < Tennis
       else
         point_0 = algorithm0(set, 0, 1)
       end
-      @points = [point_0, point_1]
     end
-
+    @points << [point_0, point_1]
   end
 
   def calculate_points_one
@@ -41,8 +49,8 @@ class TennisRatings < Tennis
       else
         point_0 = algorithm1(set, 0, 1)
       end
-      @points = [point_0, point_1]
     end
+    @points << [point_0, point_1]
   end
 
   def calculate_points_two
@@ -53,7 +61,7 @@ class TennisRatings < Tennis
     else
       point_0 = algorithm2(0, 1)
     end
-    @points = [point_0, point_1]
+    @points << [point_0, point_1]
   end
 
   def calculate_points_three
@@ -64,7 +72,7 @@ class TennisRatings < Tennis
     else
       point_0 = algorithm3(0)
     end
-    @points = [point_0, point_1]
+    @points << [point_0, point_1]
   end
 
   def algorithm0(set, winner, loser)
