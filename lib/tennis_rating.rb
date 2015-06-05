@@ -8,23 +8,32 @@ require "tennis"
     end
     final_score = Array.new
     tennis.each do |match|
-      winner = match.winner
-      if winner === 0
-        if match.sets_lost.first === 0
-          final_score << [14, 6]
-        else
-          final_score << [12, 8]
-        end
+      looser = winner = 0
+      total_sets =  match.sets_won.inject(:+)
+      if total_sets === 3
+        winner = 12
       else
-        if match.sets_lost.first === 0
-          final_score << [6, 14]
-        else
-          final_score << [8, 12]
-        end
+        winner = 14
+      end
+      looser = looser_max(match)
+      if match.winner === 0
+        final_score << [winner, looser]
+      else
+        final_score << [looser, winner]
       end
     end
     final_score
   end
 
-scores = ["6-4, 6-2", "6-2, 4-6, 5-7", "3-6, 6-2, 6-2",  "6-3, 6-3"]
+
+  def looser_max(match)
+    looser = 0
+    looser = 1 if match.winner === 0
+    looser_game = match.score.sort_by { |score| score[looser] }
+    total_looser_score = looser_game[0][looser] + looser_game[1][looser]
+    total_looser_score = 8 if total_looser_score > 8
+    total_looser_score
+  end
+
+scores = ["6-4, 6-2", "6-2, 4-6, 5-7", "3-6, 6-2, 6-2",  "6-3, 6-3", "6-1, 6-1", "1-6, 1-6"]
 p points_for(scores)
