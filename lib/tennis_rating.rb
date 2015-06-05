@@ -27,4 +27,4 @@ require "tennis"
   end
 
 scores = ["6-4, 6-2", "6-2, 4-6, 5-7", "3-6, 6-2, 6-2",  "6-3, 6-3"]
-p points_for("")
+p points_for(scores)
