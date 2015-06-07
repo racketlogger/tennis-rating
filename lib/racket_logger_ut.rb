@@ -9,7 +9,11 @@ class RacketLoggerUT
     raise "Scores is not an array" unless scores.instance_of? Array
     tennis = Array.new
     scores.each do |score|
-      tennis << Tennis.new(score)
+      if score.eql?("Default") # to handle default values
+        tennis << Tennis.new("6-0, 6-0")
+      else
+        tennis << Tennis.new(score)
+      end
     end
     final_score = []
     score = []
