@@ -7,27 +7,7 @@ class RacketLoggerUT
 
   def initialize(scores)
     raise "Scores is not an array" unless scores.instance_of? Array
-    tennis = Array.new
-    scores.each do |score|
-      if score.eql?("Default") # to handle default values
-        tennis << Tennis.new("6-0, 6-0")
-      else
-        tennis << Tennis.new(score)
-      end
-    end
-    final_score = []
-    score = []
-    tennis.each do |match|
-      loser = winner = 0
-      total_sets =  match.sets_won.inject(:+)
-      winner = 14
-      winner = 12 if total_sets === 3
-      loser = loser_max(match)
-      score = [loser, winner]
-      score = [winner, loser] if match.winner === 0
-      final_score  << score
-    end
-    @points = final_score
+    calculate_points(scores)
     calculate_rating
   end
 
@@ -35,11 +15,25 @@ private
   def loser_max(match)
     loser = 0
     return 0 if match.default?
-    loser = 1 if match.winner === 0
+    loser = 1 if match.winner == 0
     loser_game = match.score.sort_by { |score| -score[loser] }
     total_loser_score = loser_game[0][loser] + loser_game[1][loser]
     total_loser_score = 8 if total_loser_score > 8
     total_loser_score
+  end
+
+  def calculate_points(scores)
+    @points = scores.map do |score|
+      if score.eql?("Default")
+        nil
+      else
+        match = Tennis.new(score)
+        total_sets =  match.sets_won.inject(:+)
+        winner = total_sets == 3 ? 12 : 14
+        loser = loser_max(match)
+        (match.winner == 0) ? [winner, loser] : [loser, winner]
+      end
+    end.compact
   end
 
   def calculate_rating
